@@ -2,8 +2,8 @@
 
 Brainstorming Ideas
 ---------------------------------
-*
-*
+* chat services
+*ticket system
 *
 *
 *
