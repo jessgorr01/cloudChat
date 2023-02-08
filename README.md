@@ -1,9 +1,7 @@
 # 468-class-project
+# RamBot
 
-Brainstorming Ideas
----------------------------------
-* chat services
-*ticket system
-*
-*
-*
+
+#Group Members
+Brendan Dill, Jessica Gorr, Kiah Johnson, 
+Nathan Parlett, and Zhayria Washington 
