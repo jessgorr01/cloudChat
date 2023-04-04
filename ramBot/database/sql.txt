@@ -1,0 +1,65 @@
+docker run -d -p 3306:3306 --name mysql-docker-container -e MYSQL_ROOT_PASSWORD=cloudroot -e MYSQL_DATABASE=CloudChat -e MYSQL_USER=cloud -e MYSQL_PASSWORD=cloud mysql/mysql-server:latest
+
+sudo docker exec -it mysql-docker-container bash
+
+mysql -u root -p
+
+use CloudChat
+
+CREATE TABLE Users (UserName nvarchar(30) NOT NULL,
+IPAddress nvarchar(255) NOT NULL,
+UserType nvarchar(10) NOT NULL,
+UNIQUE (UserName),
+check(UserType = "Guest" or "Registered"));
+
+CREATE TABLE Passwords (UserName nvarchar(30) NOT NULL,
+PasswordHash nvarchar(255) NOT NULL,
+UNIQUE (UserName));
+
+CREATE TABLE RoomMessages (UserName nvarchar(30) NOT NULL,
+Message nvarchar(255) NOT NULL, Time nvarchar(30) NOT NULL);
+
+DELIMITER //
+CREATE PROCEDURE NewGuestUser (IN UName nvarchar(30), IPAddr nvarchar(255))
+BEGIN
+INSERT INTO Users (UserName, IPAddress, UserType)
+VALUES (UName, IPAddr, "Guest");
+END //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE NewRegisteredUser (UName nvarchar(30),  IPAddr nvarchar(255), PsswrdHash nvarchar(255))
+BEGIN
+INSERT INTO Users (UserName, IPAddress, UserType)
+VALUES (UName, IPAddr, "Registered");
+
+INSERT INTO Passwords (UserName, PasswordHash)
+VALUES (UName, PsswrdHash);
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE NewChatRoom (TableName nvarchar(30))
+BEGIN
+CREATE TABLE TableName (UserName nvarchar(30) NOT NULL,
+Message nvarchar(255) NOT NULL, Time nvarchar(30));
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE AddMessage (TableName nvarchar(30), UName nvarchar(30), Mssg nvarchar(255))
+BEGIN
+INSERT INTO RoomMessages (UserName, Message)
+VALUES (UName, Mssg);
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE GetLastTwelveMessages (TableName nvarchar(30))
+BEGIN
+SELECT Message FROM TableName
+LIMIT 12;
+END //
+DELIMITER ;
+
