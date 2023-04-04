@@ -1,0 +1,25 @@
+version: "2"
+
+services:
+  rng:
+    build: rng
+    ports:
+    - "8001:80"
+
+  hasher:
+    build: hasher
+    ports:
+    - "8002:80"
+
+  webui:
+    build: webui
+    ports:
+    - "CHANGE_THIS_VALUE:3000"
+    volumes:
+    - "./webui/files/:/files/"
+
+  database:
+    image: sql
+
+  worker:
+    build: worker
