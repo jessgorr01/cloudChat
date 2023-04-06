@@ -19,9 +19,9 @@ metadata:
   name: database 
 spec:  
   ports:    
-    - port: 6379      
+    - port: 3000      
       protocol: TCP      
-      targetPort: 6379  
+      targetPort: 3000  
   selector:    
       app: database
  
