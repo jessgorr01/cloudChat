@@ -15,3 +15,5 @@ services:
     restart: always
     ports:
       - 8080:8080
+EXPOSE
+   ports: 3000
