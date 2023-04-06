@@ -17,4 +17,4 @@ spec:
         image: DOCKER_REGISTRY/webui:BUILD_NUMBER
         ports:
           - name: http-port
-            containerPort: 3000
+            containerPort: 80
