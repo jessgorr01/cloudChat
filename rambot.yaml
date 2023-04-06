@@ -63,4 +63,4 @@ spec:
         image: sql
         ports:
           - name: http-port
-            containerPort: 6379
+            containerPort: 3000
