@@ -14,6 +14,7 @@ services:
     image: adminer
     restart: always
     ports:
-      - 8080:8080
-EXPOSE
-   ports: 3000
+      - containerPort: 3000
+ ports:
+                - port: 3000
+                  protocol: TCP
