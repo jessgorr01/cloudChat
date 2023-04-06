@@ -4,9 +4,24 @@ services:
   webui:
     build: webui
     ports:
-    - "CHANGE_THIS_VALUE:3000"
+    - "80:80"
     volumes:
     - "./webui/files/:/files/"
 
-  database:
-    image: sql
+  #database               
+        mydb:
+                restart: always
+                container_name: sql
+                image: mysql
+                environment:
+                        MYSQL_ROOT_PASSWORD: notpassword
+                        MYSQL_ROOT_HOST: '%'
+                        MYSQL_DATABASE: campus
+                ports:
+                        - "3000:3000"
+                volumes:
+                        - mysql:/var/lib/mysql
+                        - mysql_config:/etc/mysql
+volumes:
+        mysql:
+        mysql_config: 
