@@ -48,7 +48,7 @@ END //
 DELIMITER ;
 
 DELIMITER //
-CREATE PROCEDURE AddMessage (TableName nvarchar(30), UName nvarchar(30), Mssg nvarchar(255))
+CREATE PROCEDURE AddMessage (UName nvarchar(30), Mssg nvarchar(255))
 BEGIN
 INSERT INTO RoomMessages (UserName, Message)
 VALUES (UName, Mssg);
