@@ -12,12 +12,17 @@ UserType nvarchar(10) NOT NULL,
 UNIQUE (UserName),
 check(UserType = "Guest" or "Registered"));
 
+CREATE TABLE BanList (IPAddress nvarchar(255) NOT NULL);
+
 CREATE TABLE Passwords (UserName nvarchar(30) NOT NULL,
 PasswordHash nvarchar(255) NOT NULL,
 UNIQUE (UserName));
 
 CREATE TABLE RoomMessages (UserName nvarchar(30) NOT NULL,
-Message nvarchar(255) NOT NULL, Time nvarchar(30) NOT NULL);
+Message nvarchar(255) NOT NULL, Time nvarchar(30) NOT NULL); 
+
+
+
 
 DELIMITER //
 CREATE PROCEDURE NewGuestUser (IN UName nvarchar(30), IPAddr nvarchar(255))
@@ -39,16 +44,39 @@ VALUES (UName, PsswrdHash);
 END //
 DELIMITER ;
 
+
 DELIMITER //
-CREATE PROCEDURE NewChatRoom (TableName nvarchar(30))
+CREATE PROCEDURE BanUser (IN IPAddr nvarchar(255))
 BEGIN
-CREATE TABLE TableName (UserName nvarchar(30) NOT NULL,
-Message nvarchar(255) NOT NULL, Time nvarchar(30));
+INSERT INTO BanList (IPAddress)
+VALUES (IPAddr);
+Delete From Users WHERE IPAddress=IPAddr;
 END //
 DELIMITER ;
 
 DELIMITER //
-CREATE PROCEDURE AddMessage (UName nvarchar(30), Mssg nvarchar(255))
+CREATE PROCEDURE IsBanned (IN IPAddr nvarchar(255))
+BEGIN
+Select IPAddress,
+IF(IPAddress = IPAddr, "User Is Banned", "Error")
+as BanText
+From BanList Where IPAddress = IPAddr;
+END //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE UserLogin (IN UName nvarchar(30), PsswrdHash nvarchar(255))
+BEGIN
+Select UserName, PasswordHash,
+IF(PasswordHash = PsswrdHash, "Valid Credentials", "Invalid Credentials")
+as Valid
+From Passwords Where UserName = UName;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE AddMessage (IN TableName nvarchar(30), UName nvarchar(30), Mssg nvarchar(255))
 BEGIN
 INSERT INTO RoomMessages (UserName, Message)
 VALUES (UName, Mssg);
@@ -56,9 +84,9 @@ END //
 DELIMITER ;
 
 DELIMITER //
-CREATE PROCEDURE GetLastTwelveMessages (TableName nvarchar(30))
+CREATE PROCEDURE GetLastTwelveMessages2 ()
 BEGIN
-SELECT Message FROM TableName
+SELECT Message FROM RoomMessages
 LIMIT 12;
 END //
 DELIMITER ;
