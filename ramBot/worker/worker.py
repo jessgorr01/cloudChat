@@ -8,3 +8,13 @@ mydb = mysql.connector.connect(
 )
 
 print(mydb)
+
+#Get Users
+mycursor = mydb.cursor()
+
+mycursor.execute("SELECT * FROM Users")
+
+myresult = mycursor.fetchall()
+
+for x in myresult:
+  print(x)
