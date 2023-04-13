@@ -1,24 +1,34 @@
-version: "2"
+version: '3'
 
 services:
-  webui:
-    build: webui
-    ports:
-    - "80:80"
-    volumes:
-    - "./webui/files/:/files/"
-
-  #database               
+#webui
+        webui:
+                build: webui
+                image: 127.0.0.1:35000/webui:0.1
+                container_name: webui
+                volumes:
+                        - ./webui/logs:/var/logs
+                restart: unless-stopped
+                ports:
+                        - "80:80"
+                        - "443:443"
+#webscraper
+        webscraper:
+                build: webscraper
+                image: 127.0.0.1:35000/webscraper:0.1
+                ports:
+                        - "8000:5000"
+#database               
         mydb:
                 restart: always
-                container_name: sql
+                container_name: mydb
                 image: mysql
                 environment:
                         MYSQL_ROOT_PASSWORD: notpassword
                         MYSQL_ROOT_HOST: '%'
                         MYSQL_DATABASE: campus
                 ports:
-                        - "3000:3000"
+                        - "3308:3306"
                 volumes:
                         - mysql:/var/lib/mysql
                         - mysql_config:/etc/mysql
