@@ -3,10 +3,10 @@ kind: Deployment
 metadata:
   name: webui
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: webui
+  replicas: 1 # tells deployment to run 2 pods matching the template
   template:
     metadata:
       labels:
@@ -14,7 +14,6 @@ spec:
     spec:
       containers:
       - name: webui
-        image: DOCKER_REGISTRY/webui:BUILD_NUMBER
+        image: 127.0.0.1:35000/webui:0.1
         ports:
-          - name: http-port
-            containerPort: 80
+        - containerPort: 80
