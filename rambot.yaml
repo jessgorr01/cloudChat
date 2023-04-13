@@ -1,12 +1,73 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+        name: mydb
+spec:
+        replicas: 1
+        selector:
+                matchLabels:
+                        app: mydb
+        strategy:
+                type: Recreate
+        template:
+                metadata:
+                        labels:
+                                app: mydb
+                spec:
+                        containers:
+                                - image: mysql:latest
+                                  name: mydb
+                                  env:
+                                          - name: MYSQL_ROOT_PASSWORD
+                                            valueFrom: 
+                                                secretKeyRef:
+                                                    name: mysql-secret
+                                                    key: password
+                                          - name: MYSQL_DATABASE
+                                            value: campus
+                                  ports:
+                                          - containerPort: 3306
+                                  volumeMounts:
+                                          - name: mysql-persistent-storage
+                                            mountPath: /var/lib/mysql
+                        volumes:
+                                - name: mysql-persistent-storage
+                                  persistentVolumeClaim:
+                                          claimName: mysql-pvc
+---                                          
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+        name: worker
+spec:
+        replicas: 1
+        selector:
+                matchLabels:
+                        app: worker
+        template:
+                metadata:
+                        labels:
+                                app: worker
+                spec:
+                        containers:
+                                - name: worker-rasa
+                                  image: 127.0.0.1:35000/chatbot-rasa:0.3
+                                  ports:
+                                          - containerPort: 5005
+                                - name: worker-actions
+                                  image: 127.0.0.1:35000/worker-actions:0.1
+                                  ports:
+                                          - containerPort: 5055
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
   name: webui
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: webui
+  replicas: 1 # tells deployment to run 2 pods matching the template
   template:
     metadata:
       labels:
@@ -14,53 +75,6 @@ spec:
     spec:
       containers:
       - name: webui
-        image: 127.0.0.1:30000/webui:v0.1
+        image: 127.0.0.1:35000/webui:0.1
         ports:
-          - name: http-port
-            containerPort: 80
-
----
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: worker
-spec:
-  replicas: 4
-  selector:
-    matchLabels:
-      app: worker
-  template:
-    metadata:
-      labels:
-        app: worker
-    spec:
-      containers:
-      - name: worker
-        image: 127.0.0.1:30000/worker:v0.1
-        ports:
-          - name: http-port
-            containerPort: 80
-
----
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: database
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: database
-  template:
-    metadata:
-      labels:
-        app: database
-    spec:
-      containers:
-      - name: sql
-        image: sql
-        ports:
-          - name: http-port
-            containerPort: 3000
+        - containerPort: 80
