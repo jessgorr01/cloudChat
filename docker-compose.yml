@@ -12,12 +12,6 @@ services:
                 ports:
                         - "80:80"
                         - "443:443"
-#webscraper
-        webscraper:
-                build: webscraper
-                image: 127.0.0.1:35000/webscraper:0.1
-                ports:
-                        - "8000:5000"
 #database               
         mydb:
                 restart: always
