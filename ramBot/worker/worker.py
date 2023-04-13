@@ -18,3 +18,13 @@ myresult = mycursor.fetchall()
 
 for x in myresult:
   print(x)
+
+#Get Messages
+mycursor = mydb.cursor()
+
+mycursor.execute("SELECT * FROM RoomMessages")
+
+myresult = mycursor.fetchall()
+
+for x in myresult:
+  print(x)
