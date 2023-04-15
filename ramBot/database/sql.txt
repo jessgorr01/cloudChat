@@ -76,15 +76,15 @@ END //
 DELIMITER ;
 
 DELIMITER //
-CREATE PROCEDURE AddMessage (IN TableName nvarchar(30), UName nvarchar(30), Mssg nvarchar(255))
+CREATE PROCEDURE AddMessage (IN UName nvarchar(30), Mssg nvarchar(255), Time nvarchar(30))
 BEGIN
-INSERT INTO RoomMessages (UserName, Message)
+INSERT INTO RoomMessages (UserName, Message, Time)
 VALUES (UName, Mssg);
 END //
 DELIMITER ;
 
 DELIMITER //
-CREATE PROCEDURE GetLastTwelveMessages2 ()
+CREATE PROCEDURE GetLastTwelveMessages ()
 BEGIN
 SELECT Message FROM RoomMessages
 LIMIT 12;
