@@ -1,0 +1,100 @@
+docker run -d -p 3306:3306 --name mysql-docker-container -e MYSQL_ROOT_PASSWORD=cloudroot -e MYSQL_DATABASE=CloudChat -e MYSQL_USER=cloud -e MYSQL_PASSWORD=cloud mysql/mysql-server:latest
+
+sudo docker exec -it mysql-docker-container bash
+
+mysql -u root -p
+
+use CloudChat
+
+CREATE TABLE Users (UserName nvarchar(30) NOT NULL,
+IPAddress nvarchar(255) NOT NULL,
+UserType nvarchar(10) NOT NULL,
+UNIQUE (UserName),
+check(UserType = "Guest" or "Registered"));
+
+CREATE TABLE BanList (IPAddress nvarchar(255) NOT NULL);
+
+CREATE TABLE Passwords (UserName nvarchar(30) NOT NULL,
+PasswordHash nvarchar(255) NOT NULL,
+UNIQUE (UserName));
+
+CREATE TABLE RoomMessages (UserName nvarchar(30) NOT NULL,
+Messages nvarchar(255) NOT NULL, Time DATETIME NOT NULL);
+
+
+DELIMITER //
+CREATE PROCEDURE NewGuestUser (IN UName nvarchar(30), IPAddr nvarchar(255))
+BEGIN
+INSERT INTO Users (UserName, IPAddress, UserType)
+VALUES (UName, IPAddr, "Guest");
+END //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE NewRegisteredUser (UName nvarchar(30),  IPAddr nvarchar(255), PsswrdHash nvarchar(255))
+BEGIN
+INSERT INTO Users (UserName, IPAddress, UserType)
+VALUES (UName, IPAddr, "Registered");
+
+INSERT INTO Passwords (UserName, PasswordHash)
+VALUES (UName, PsswrdHash);
+END //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE BanUser (IN IPAddr nvarchar(255))
+BEGIN
+INSERT INTO BanList (IPAddress)
+VALUES (IPAddr);
+Delete From Users WHERE IPAddress=IPAddr;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE IsBanned (IN IPAddr nvarchar(255))
+BEGIN
+Select IPAddress,
+IF(IPAddress = IPAddr, "User Is Banned", "Error")
+as BanText
+From BanList Where IPAddress = IPAddr;
+END //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE UserLogin (IN UName nvarchar(30), PsswrdHash nvarchar(255))
+BEGIN
+Select UserName, PasswordHash,
+IF(PasswordHash = PsswrdHash, "Valid Credentials", "Invalid Credentials")
+as Valid
+From Passwords Where UserName = UName;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE AddMessage (IN UName nvarchar(30), Mssg nvarchar(255))
+BEGIN
+INSERT INTO RoomMessages (UserName, Messages, Time)
+VALUES (UName, Mssg, CURRENT_TIMESTAMP);
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE GetLastTwelveMessages ()
+BEGIN
+SELECT UserName, Messages, Time FROM RoomMessages
+LIMIT 12;
+END //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE GetLastNMessages (IN NumberofMessages INT)
+BEGIN
+SELECT UserName, Messages, Time FROM RoomMessages
+LIMIT NumberofMessages;
+END //
+DELIMITER ;
+
