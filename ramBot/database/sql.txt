@@ -19,7 +19,9 @@ PasswordHash nvarchar(255) NOT NULL,
 UNIQUE (UserName));
 
 CREATE TABLE RoomMessages (UserName nvarchar(30) NOT NULL,
-Message nvarchar(255) NOT NULL, Time nvarchar(30) NOT NULL); 
+Messages nvarchar(255) NOT NULL, Time DATETIME NOT NULL);
+
+
 
 
 
@@ -76,18 +78,27 @@ END //
 DELIMITER ;
 
 DELIMITER //
-CREATE PROCEDURE AddMessage (IN UName nvarchar(30), Mssg nvarchar(255), Time nvarchar(30))
+CREATE PROCEDURE AddMessage (IN UName nvarchar(30), Mssg nvarchar(255))
 BEGIN
-INSERT INTO RoomMessages (UserName, Message, Time)
-VALUES (UName, Mssg);
+INSERT INTO RoomMessages (UserName, Messages, Time)
+VALUES (UName, Mssg, CURRENT_TIMESTAMP);
 END //
 DELIMITER ;
 
 DELIMITER //
-CREATE PROCEDURE GetLastTwelveMessages ()
+CREATE PROCEDURE GetLastTwelveMessagesWithDate ()
 BEGIN
-SELECT Message FROM RoomMessages
+SELECT Messages, Time FROM RoomMessages
 LIMIT 12;
+END //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE GetLastNMessagesWithDate (IN NumberofMessages INT)
+BEGIN
+SELECT Messages, Time FROM RoomMessages
+LIMIT NumberofMessages;
 END //
 DELIMITER ;
 
