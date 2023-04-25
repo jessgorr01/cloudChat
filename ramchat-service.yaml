@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-        name: mydb
+        name: mysql-docker-container
 spec:
         ports:
                 - port: 3306
                   protocol: TCP
         selector:
-                app: mydb
+                app: mysql-docker-container
 ---
 apiVersion: v1
 kind: Service
