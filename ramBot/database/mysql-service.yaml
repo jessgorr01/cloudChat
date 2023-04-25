@@ -4,4 +4,4 @@ metadata:
         name: mysql-secret
 type: kubernetes.io/basic-auth
 stringData:
-        password: notpassword
+        password: cloud
