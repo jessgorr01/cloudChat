@@ -4,7 +4,7 @@ services:
 #webui
         webui:
                 build: webui
-                image: 155.98.37.40/webui:0.1
+                image: /users/jg924423/cloudChat/webui
                 container_name: webui
                 volumes:
                         - ./webui/logs:/var/logs
