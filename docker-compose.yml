@@ -4,7 +4,7 @@ services:
 #webui
         webui:
                 build: webui
-                image: 127.0.0.1:35000/webui:0.1
+                image: 155.98.37.40/webui:0.1
                 container_name: webui
                 volumes:
                         - ./webui/logs:/var/logs
@@ -15,12 +15,12 @@ services:
 #database               
         mydb:
                 restart: always
-                container_name: mydb
+                container_name: mysql-docker-container
                 image: mysql
                 environment:
-                        MYSQL_ROOT_PASSWORD: notpassword
-                        MYSQL_ROOT_HOST: '%'
-                        MYSQL_DATABASE: campus
+                        MYSQL_ROOT_PASSWORD: cloudroot
+                        MYSQL_ROOT_HOST: 'cloud'
+                        MYSQL_DATABASE: CloudChat
                 ports:
                         - "3308:3306"
                 volumes:
