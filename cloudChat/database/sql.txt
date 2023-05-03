@@ -8,9 +8,9 @@ use CloudChat
 
 CREATE TABLE Users (UserName nvarchar(30) NOT NULL,
 IPAddress nvarchar(255) NOT NULL,
-UserType nvarchar(10) NOT NULL,
+UserType nvarchar(11) NOT NULL,
 UNIQUE (UserName),
-check(UserType = "Guest" or "Registered"));
+check(UserType = "Guest" or UserType = "Registered"));
 
 CREATE TABLE BanList (IPAddress nvarchar(255) NOT NULL);
 
@@ -18,8 +18,7 @@ CREATE TABLE Passwords (UserName nvarchar(30) NOT NULL,
 PasswordHash nvarchar(255) NOT NULL,
 UNIQUE (UserName));
 
-CREATE TABLE RoomMessages (UserName nvarchar(30) NOT NULL,
-Messages nvarchar(255) NOT NULL, Time DATETIME NOT NULL);
+CREATE TABLE RoomMessages (RoomID nvarchar(30) NOT NULL, UserName nvarchar(30) NOT NULL, Messages nvarchar(255) NOT NULL, Time DATETIME NOT NULL);
 
 
 DELIMITER //
@@ -74,26 +73,28 @@ END //
 DELIMITER ;
 
 DELIMITER //
-CREATE PROCEDURE AddMessage (IN UName nvarchar(30), Mssg nvarchar(255))
+CREATE PROCEDURE AddMessage (IN RmID nvarchar(30), UName nvarchar(30), Mssg nvarchar(255))
 BEGIN
-INSERT INTO RoomMessages (UserName, Messages, Time)
-VALUES (UName, Mssg, CURRENT_TIMESTAMP);
+INSERT INTO RoomMessages (RoomID, UserName, Messages, Time)
+VALUES (RmID, UName, Mssg, CURRENT_TIMESTAMP);
 END //
 DELIMITER ;
 
 DELIMITER //
-CREATE PROCEDURE GetLastTwelveMessages ()
+CREATE PROCEDURE GetLastTwelveMessagesFromRoomN (IN RmID nvarchar(30))
 BEGIN
 SELECT UserName, Messages, Time FROM RoomMessages
+Where RoomID = RmID
 LIMIT 12;
 END //
 DELIMITER ;
 
 
 DELIMITER //
-CREATE PROCEDURE GetLastNMessages (IN NumberofMessages INT)
+CREATE PROCEDURE GetLastNMessagesFromRoomN (IN RmID nvarchar(30), NumberofMessages INT)
 BEGIN
 SELECT UserName, Messages, Time FROM RoomMessages
+Where RoomID = RmID
 LIMIT NumberofMessages;
 END //
 DELIMITER ;
