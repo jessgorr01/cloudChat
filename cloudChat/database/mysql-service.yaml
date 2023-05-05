@@ -5,5 +5,4 @@ metadata:
 type: kubernetes.io/basic-auth
 stringData:
         password: cloud
-COPY:
-        sql.txt
+COPY worker.py /
