@@ -5,8 +5,7 @@ metadata:
 provisioner: kubernetes.io/gce-pd
 parameters:
         type: pd-standard
-COPY:
-        sql.txt
+
 ---
 apiVersion: v1
 kind: PersistentVolume
