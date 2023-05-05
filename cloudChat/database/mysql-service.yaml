@@ -1,8 +1,13 @@
-apiVersion: v1
-kind: Secret
-metadata:
-        name: mysql-secret
-type: kubernetes.io/basic-auth
-stringData:
-        password: cloud
-COPY worker.py /
+version: "3"
+
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      - cloud
+    volumes:
+      - mysql:/var/lib/mysql
+
+volumes:
+  mysql:
+docker exec -it mysql mysql -cloud cloud < sql.txt
