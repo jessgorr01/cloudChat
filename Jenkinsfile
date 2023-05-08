@@ -10,11 +10,11 @@ pipeline {
         stage('Build') {
             agent {
                 kubernetes {
-                    inheritFrom 'golang'
+                    inheritFrom 'webui'
                 }
             }
             steps {
-                container('golang') {
+                container('webui') {
                     // Create our project directory.
                     sh 'cd ${GOPATH}/src'
                     sh 'mkdir -p ${GOPATH}/src/hello-world'
@@ -77,4 +77,3 @@ pipeline {
             }
         }
     }
-}
