@@ -81,21 +81,10 @@ END //
 DELIMITER ;
 
 DELIMITER //
-CREATE PROCEDURE GetLastTwelveMessagesFromRoomN (IN RmID nvarchar(30))
+CREATE PROCEDURE GetMessagesFromRoomN (IN RmID nvarchar(30))
 BEGIN
 SELECT UserName, Messages, Time FROM RoomMessages
-Where RoomID = RmID
-LIMIT 12;
-END //
-DELIMITER ;
-
-
-DELIMITER //
-CREATE PROCEDURE GetLastNMessagesFromRoomN (IN RmID nvarchar(30), NumberofMessages INT)
-BEGIN
-SELECT UserName, Messages, Time FROM RoomMessages
-Where RoomID = RmID
-LIMIT NumberofMessages;
+Where RoomID = RmID;
 END //
 DELIMITER ;
 
