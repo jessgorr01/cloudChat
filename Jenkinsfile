@@ -10,11 +10,11 @@ pipeline {
         stage('Build') {
             agent {
                 kubernetes {
-                    inheritFrom 'webui'
+                    inheritFrom 'cloudChat'
                 }
             }
             steps {
-                container('webui') {
+                container('cloudChat') {
                     // Create our project directory.
                     sh 'cd ${GOPATH}/src'
                     sh 'mkdir -p ${GOPATH}/src/hello-world'
@@ -28,11 +28,11 @@ pipeline {
         stage('Test') {
             agent {
                 kubernetes {
-                    inheritFrom 'webui'
+                    inheritFrom 'cloudChat'
                 }
             }
             steps {
-                container('webui') {                 
+                container('cloudChat') {                 
                     // Create our project directory.
                     sh 'cd ${GOPATH}/src'
                     sh 'mkdir -p ${GOPATH}/src/hello-world'
