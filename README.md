@@ -1,9 +1,9 @@
-# 468-class-project
-# cloudChat
+# 468 Class Project: cloudChat
 
 
-#Group Members
+#### Group Members
 Brendan Dill, Jessica Gorr, Kiah Johnson, 
 Nathan Parlett, and Zhayria Washington 
 
-#How To Deploy
+### How To Deploy
+1. 
