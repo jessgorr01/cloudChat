@@ -16,12 +16,10 @@ pipeline {
             steps {
                 container('cloudChat') {
                     // Create our project directory.
-                    sh 'cd ${GOPATH}/src'
-                    sh 'mkdir -p ${GOPATH}/src/hello-world'
-                    // Copy all files in our Jenkins workspace to our project directory.                
-                    sh 'cp -r ${WORKSPACE}/* ${GOPATH}/src/hello-world'
-                    // Build the app.
-                    sh 'export GO111MODULE=auto; go build'  
+                    sh 'cd /webui'
+                    sh 'npm install'
+                    sh 'npm run build'
+                     
                 }
             }     
         }
@@ -34,14 +32,8 @@ pipeline {
             steps {
                 container('cloudChat') {                 
                     // Create our project directory.
-                    sh 'cd ${GOPATH}/src'
-                    sh 'mkdir -p ${GOPATH}/src/hello-world'
-                    // Copy all files in our Jenkins workspace to our project directory.                
-                    sh 'cp -r ${WORKSPACE}/* ${GOPATH}/src/hello-world'
-                    // Remove cached test results.
-                    sh 'go clean -cache'
-                    // Run Unit Tests.
-                    sh 'export GO111MODULE=auto; go test ./... -v -short'            
+                    sh 'cd /webui'
+                    sh 'npm start deploy'
                 }
             }
         }
